@@ -131,5 +131,6 @@ side_hole_spacing spacing between pad hole and leg holes
 
 ## Creadits
 
+Thanks to Nirvash for the idea for the corner piece.
 Thanks to Vaughan14 in the Ryhthm Game Cabs discord server for the original schematics of the panels.
-And thanks dj505 for the initial STL files for bracketless frames. I took a lot of measurements from there.
+Thanks dj505 in thingiverse for the initial STL files for bracketless frames. I took a lot of measurements from there.
