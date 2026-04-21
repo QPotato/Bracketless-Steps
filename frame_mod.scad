@@ -24,9 +24,9 @@ half_hole_depth = height / 2;
 
 // Side frame-mount holes (one per arm, stepped for M5 screw + head pocket)
 side_hole_spacing = 35;   // center-to-center from pad hole
-side_thread_dia   = 6;    // bottom/through part (screw thread clearance)
+side_thread_dia   = 5.4;    // bottom/through part (screw thread clearance)
 side_head_dia     = 9;    // top counterbore for screw head
-side_head_depth   = 6;    // counterbore depth from top (tunable)
+side_head_depth   = 11;    // counterbore depth from top (tunable)
 
 // Derived
 spacer_cx = spacer_from_outer;
