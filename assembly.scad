@@ -31,7 +31,7 @@ module single_corner() {
     if (show_corner_piece)
         color("BurlyWood")   corner_piece();
     if (show_rivet_nut)
-        color("Silver")      translate([sx, sy, 0])       rivet_nut();
+        color("Silver")      translate([sx, sy, 0]) rotate([0, 0, -45]) rivet_nut();
     if (show_spacer)
         color("Gainsboro")   translate([sx, sy, piece_h]) spacer();
     if (show_screw)

@@ -45,17 +45,21 @@ module frame(pw = frame_w, ph = frame_h) {
 
     difference() {
         union() {
-            // Corner blocks — full height
-            cube([csz, csz, fh]);
-            translate([ow-csz, 0,    0]) cube([csz, csz, fh]);
-            translate([0,    oh-csz, 0]) cube([csz, csz, fh]);
-            translate([ow-csz, oh-csz, 0]) cube([csz, csz, fh]);
+            // Corner blocks — two perpendicular outer walls + L-shaped floor plate (matching corner piece footprint)
+            translate([0,       0,       0]) { cube([csz, wall_t, fh]); cube([wall_t, csz, fh]); cube([csz, bw, wall_t]); cube([bw, csz, wall_t]); }
+            translate([ow-csz,  0,       0]) { cube([csz, wall_t, fh]); translate([csz-wall_t, 0, 0]) cube([wall_t, csz, fh]); cube([csz, bw, wall_t]); translate([csz-bw, 0, 0]) cube([bw, csz, wall_t]); }
+            translate([0,       oh-csz,  0]) { translate([0, csz-wall_t, 0]) cube([csz, wall_t, fh]); cube([wall_t, csz, fh]); translate([0, csz-bw, 0]) cube([csz, bw, wall_t]); cube([bw, csz, wall_t]); }
+            translate([ow-csz,  oh-csz,  0]) { translate([0, csz-wall_t, 0]) cube([csz, wall_t, fh]); translate([csz-wall_t, 0, 0]) cube([wall_t, csz, fh]); translate([0, csz-bw, 0]) cube([csz, bw, wall_t]); translate([csz-bw, 0, 0]) cube([bw, csz, wall_t]); }
 
-            // Side arms — lower height, overlapping corner blocks by 0.1mm
-            translate([csz-0.1, 0,      0]) cube([ow-2*csz+0.2, bw,  arm_beam_h]); // bottom
-            translate([csz-0.1, oh-bw,  0]) cube([ow-2*csz+0.2, bw,  arm_beam_h]); // top
-            translate([0,     csz-0.1,  0]) cube([bw, oh-2*csz+0.2,  arm_beam_h]); // left
-            translate([ow-bw, csz-0.1,  0]) cube([bw, oh-2*csz+0.2,  arm_beam_h]); // right
+            // Side walls — outer skin (wall_t, full height) + floor plate (bw wide, wall_t tall)
+            translate([csz-0.1, 0,         0]) cube([ow-2*csz+0.2, wall_t, fh]); // bottom outer skin
+            translate([csz-0.1, 0,         0]) cube([ow-2*csz+0.2, bw,     wall_t]); // bottom floor
+            translate([csz-0.1, oh-wall_t, 0]) cube([ow-2*csz+0.2, wall_t, fh]); // top outer skin
+            translate([csz-0.1, oh-bw,     0]) cube([ow-2*csz+0.2, bw,     wall_t]); // top floor
+            translate([0,       csz-0.1,   0]) cube([wall_t, oh-2*csz+0.2,  fh]); // left outer skin
+            translate([0,       csz-0.1,   0]) cube([bw,     oh-2*csz+0.2,  wall_t]); // left floor
+            translate([ow-wall_t, csz-0.1, 0]) cube([wall_t, oh-2*csz+0.2,  fh]); // right outer skin
+            translate([ow-bw,   csz-0.1,   0]) cube([bw,     oh-2*csz+0.2,  wall_t]); // right floor
         }
 
         // L-shaped corner pockets
