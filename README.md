@@ -14,7 +14,9 @@ The original design uses metal corner brackets + rubber L-pieces to hold the pan
 
 ### Corner piece
 
-![Corner piece top](screenshots/corner_piece.png)
+![Corner piece perspective](screenshots/corner_piece.png)
+
+![Corner piece top view](screenshots/corner_piece_top.png)
 
 ![Corner piece bottom](screenshots/corner_piece_bottom.png)
 
