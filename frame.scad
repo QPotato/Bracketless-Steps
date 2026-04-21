@@ -13,7 +13,7 @@ arm_w    = 24.0;
 piece_h  = 15.0;
 arm_beam_h = 5.5;  // side arm height (from STL reference)
 
-pad_from_outer    = 9.525;
+pad_from_outer    = 10;
 side_hole_spacing = 35;
 screw_hole_d      = 6;   // M5 clearance
 

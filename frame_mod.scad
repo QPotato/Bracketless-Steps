@@ -9,14 +9,16 @@ height           = 15.0;  // protruding corner height (not full frame thickness)
 // (= frame inner wall face, since piece sits inside 1.5mm frame walls)
 // C_Frame_AC_Accurate: holes at 24.0mm from frame outer edge → 24.0-1.5 = 22.5mm from inner face ≈ 22.7mm panel hole
 spacer_from_outer = 22.7;  // panel screw / spacer center — matches panel hole offset
-pad_from_outer    = 9.525; // pad-to-frame screw center (outer of the two, from C_Frame: 9.5mm from inner wall face)
+pad_from_outer    = 10; // pad-to-frame screw center (outer of the two, from C_Frame: 9.5mm from inner wall face)
 
-// Rivet nut specs (M6, hex body, flange at bottom)
-rivet_flange_od  = 13.5;  // flange outer diameter
-rivet_flange_h   = 1.5;   // flange thickness (estimate — measure and tune)
-rivet_body_od    = 8.8;   // hex body OD (across corners)
-rivet_total_h    = 15.0;  // total height (flange + body)
-rivet_clearance  = 0.4;   // extra clearance on body for press fit
+// DIN 933 M6 hex bolt head (captured in pocket at bottom face)
+bolt_head_af  = 10.5;  // across flats
+bolt_head_h   =  4.0;  // head height
+bolt_clearance =  0.4;  // hex pocket clearance
+
+// M6×20 round sleeve (10mm OD)
+sleeve_od        = 10.5          ;
+sleeve_clearance =  0.3;
 
 // Pad-to-frame screw half-hole
 pad_screw_dia   = 9;      // diameter
@@ -47,18 +49,18 @@ module corner_piece() {
             cube([arm_length, arm_width, height]);
             cube([arm_width, arm_length, height]);
             translate([spacer_cx, spacer_cy, 0])
-                cylinder(h = height, d = rivet_flange_od + 8);
+                cylinder(h = height, d = sleeve_od + 8);
         }
 
-        // Rivet nut flange recess (bottom face)
+        // Hex bolt head pocket (bottom face) — captures DIN 933 M6 head
         translate([spacer_cx, spacer_cy, -0.1])
-            cylinder(h = rivet_flange_h + 0.1, d = rivet_flange_od);
+            cylinder(h = bolt_head_h + 0.1,
+                     d = bolt_head_af / cos(30) + bolt_clearance, $fn = 6);
 
-        // Rivet nut body hole — hex, full remaining height, rotated 45°
-        translate([spacer_cx, spacer_cy, rivet_flange_h - 0.1])
-            rotate([0, 0, -45])
-            cylinder(h = rivet_total_h - rivet_flange_h + 0.2,
-                     d = rivet_body_od + rivet_clearance, $fn = 6);
+        // Round sleeve through-hole — M6×20, 10mm OD
+        translate([spacer_cx, spacer_cy, bolt_head_h - 0.1])
+            cylinder(h = height - bolt_head_h + 0.2,
+                     d = sleeve_od + sleeve_clearance);
 
         // Pad-to-frame half-hole (blind from bottom)
         translate([pad_cx, pad_cy, -0.1])
