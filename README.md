@@ -75,7 +75,8 @@ The corner piece sits in a pocket in the frame corner. A rivet nut is pressed in
 | `panel_corner_cnc.scad` | Corner panel: 334×278mm. |
 | `panel_cnc_export.scad` | DXF export helper. Set `LAYER`, `PANEL_W`, and `PANEL_H`, export as DXF. |
 | `dxf_export/` | Pre-exported DXF files for both panel sizes, one file per machining operation. |
-| `cnc_cutting_guide.md` | Machine-specific instructions for cutting the polycarbonate panels on CNC-Fraese-2. |
+| `cnc_cutting_guide.md` | Generic CNC cutting guide: requirements, DXF layer reference, CAM setup, and polycarbonate tips. |
+| `cnc_cutting_guide_fraese2.md` | Machine-specific instructions for CNC-Fraese-2 at das-labor. |
 
 ---
 
@@ -92,7 +93,7 @@ The panel hole at each corner is a 3-step profile:
 
 Import the relevant DXF files into your CAM software and assign the depths above. For laser cutters or basic routers, `outline` + `drill` are the minimum needed; pocket layers require depth control.
 
-See `cnc_cutting_guide.md` for the LinuxCNC workflow and the machine-specific setup notes.
+See `cnc_cutting_guide.md` for requirements, DXF layer reference, and general CAM guidance. See `cnc_cutting_guide_fraese2.md` for a machine-specific worked example on CNC-Fraese-2.
 
 ---
 

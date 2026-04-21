@@ -1,125 +1,107 @@
 # CNC Cutting Guide
 
-This guide is for cutting the polycarbonate panels on CNC-Fraese-2.
-It is based on the machine page and the lab workflow guide.
+This guide covers the requirements and recommended workflow for cutting the polycarbonate panels on any 3-axis CNC router.
 
-## Machine Facts
+For a specific worked example on one particular machine see `cnc_cutting_guide_fraese2.md`.
 
-- Controller: LinuxCNC
-- Travel: X 1150 mm, Y 750 mm, Z 220 mm
-- Spindle: G-Penny 2.2 kW, water cooled
-- Max spindle speed: 24,000 rpm
-- Tool holder: ER20
-- Max shank diameter: 14 mm
-- Standard coolant: minimal lubrication, M7
-- Approved materials include plastics such as POM, acrylic, and polycarbonate
+## Machine Requirements
 
-## Panel Stock
+- 3-axis CNC router with at least 335 mm × 280 mm × 15 mm working envelope (X × Y × Z)
+- Spindle capable of running carbide end mills suitable for plastic at recommended chip loads
+- Tool holding that accepts standard end mill shanks (6 mm or 1/4" shank is typical)
+- Ability to set a work offset at a known corner of the stock
 
-- Center panel: 278 x 278 x 10 mm
-- Corner panel: 334 x 278 x 10 mm
-- Your stock sizes are sufficient:
-- Center sheet: 300 x 300 x 10 mm
-- Corner sheet: 300 x 350 x 10 mm
+The panels are 10 mm thick polycarbonate. Your Z clearance only needs to exceed that by a comfortable margin for the tool and collet.
 
-## File Set
+## Panel Dimensions
 
-- `panel_cnc_export.scad` is the DXF export helper.
-- `dxf_export/*_outline.dxf` is the outer cut path.
-- `dxf_export/*_drill.dxf` is the through-hole pattern.
-- `dxf_export/*_mid_pocket.dxf` is the middle pocket layer.
-- `dxf_export/*_top_pocket.dxf` is the top pocket layer.
+| Panel  | Width  | Height | Thickness |
+|--------|--------|--------|-----------|
+| Center | 278 mm | 278 mm | 10 mm     |
+| Corner | 334 mm | 278 mm | 10 mm     |
 
-## Confirm Before CAM
+Hole centers are 22.7 mm inward from each edge in both X and Y.
 
-Fill these in with the expert operator before generating toolpaths:
+## Hole Profile
 
-- Tool diameter: ____ mm
-- Flute count: ____
-- Stickout from collet: ____ mm
-- Spindle speed: ____ rpm
-- Feed rate for contour cuts: ____ mm/min
-- Feed rate for plunges: ____ mm/min
-- Tabs or hold-down strategy: ____
-- Coolant strategy: M7 / none / other: ____
+Each corner hole is a three-step feature machined from the top surface:
 
-If you do not know the tool diameter, stop here and ask. The stepover, plunge rate, and minimum inside radius all depend on it.
+| Layer      | Diameter | Depth from top |
+|------------|----------|----------------|
+| top_pocket | 20 mm    | 2 mm           |
+| mid_pocket | 16 mm    | 5 mm total     |
+| drill      | 11 mm    | through (10 mm)|
+
+The pockets are concentric. The through hole goes all the way through the panel.
+
+## DXF File Set
+
+The `dxf_export/` folder contains one DXF per panel per machining operation:
+
+| File                     | Operation                          | Depth        |
+|--------------------------|------------------------------------|--------------|
+| `*_outline.dxf`          | Outer profile contour cut          | Full (10 mm) |
+| `*_drill.dxf`            | Through holes, d = 11 mm           | Full (10 mm) |
+| `*_mid_pocket.dxf`       | Stepped pocket, d = 16 mm          | 5 mm         |
+| `*_top_pocket.dxf`       | Top pocket, d = 20 mm              | 2 mm         |
+
+`center_*` files are for the 278 × 278 mm panel; `corner_*` for the 334 × 278 mm panel.
+
+## Material and Stock
+
+- Material: polycarbonate (PC)
+- Center stock: 300 × 300 × 10 mm is sufficient
+- Corner stock: 300 × 350 × 10 mm is sufficient (orient the 334 mm cut dimension along the 350 mm stock dimension)
+- Keep the protective film on the sheet during cutting if possible; it helps prevent scratches and chip adhesion
+
+## Fixturing
+
+The panels are too large for a standard machine vise. Use the spoilboard:
+
+- Double-sided tape is the simplest option and needs no edge clearance
+- Screws through sacrificial corner areas also work well
+- Toe clamps along the long sides are an alternative if tape is not available
+- Leave enough margin around the part for whichever method you choose
 
 ## Recommended Cut Order
 
-1. Import the DXFs into CAM.
-2. Generate the pocket operations first.
-3. Cut the through-drill layer next.
-4. Cut the outline last so the part stays stable while the internal features are machined.
+1. Pocket operations first (`top_pocket`, then `mid_pocket`)
+2. Through holes next (`drill`)
+3. Outer contour last (`outline`) — cutting this last keeps the part stable while internal features are machined
+
+## CAM Setup
+
+- Set units to millimeters
+- Set stock thickness to 10 mm
+- Place the program origin at a known corner of the stock and use the same corner for your machine work offset
+- Use a climb or conventional contour for the outline; the tool can enter via a helical plunge or ramp rather than a straight plunge
+- Add tabs or rely on your fixturing to keep the part from shifting when the outline releases it
+
+## Feeds, Speeds, and Tool Selection
+
+These depend on your specific machine, spindle, and tooling. General guidance for polycarbonate:
+
+- Use a sharp carbide end mill; dull tooling melts polycarbonate instead of cutting it
+- Single-flute or two-flute end mills are common choices for plastics
+- Radial engagement (stepover): start below 40% of tool diameter
+- If the material starts to melt, smear, or weld to the cutter, reduce feed rate or increase spindle speed
+- Air blast or mist coolant helps clear chips and prevent heat buildup; not always required for light cuts
+
+Use your tool manufacturer's data for starting values, then adjust based on the results of a test cut.
 
 ## CAM Checklist
 
-1. Set units to millimeters.
-2. Set the stock thickness to 10 mm.
-3. Load the correct DXF for the panel size you are making.
-4. Place the program origin at the same corner used in the machine setup.
-5. Use the tool diameter from the expert confirmation, not a guess.
-6. Keep pocket stepover conservative for polycarbonate; start below 40 percent of tool diameter.
-7. Use the pocket operations before the outer contour.
-8. Add tabs or another hold-down method for the final outline cut so the part does not move when it releases.
-9. Verify that hole diameters and pocket depths match the README table.
-10. Simulate the job before posting G-code.
-
-## Setup Before Cutting
-
-1. Do not start without an experienced operator present. The lab wiki says the machine may only be used by instructed people.
-2. These panels must be fixtured on the spoilboard — the machine vise has a 110 mm max clamping length and cannot hold a 278 mm or 334 mm panel. Use double-sided tape, screws into a sacrificial area, or toe clamps along the long sides.
-3. Clear the bed, check the spoilboard, and confirm the fixture plan before loading material.
-4. Keep the protective film on the polycarbonate sheet until the cut is done, unless the experts ask otherwise.
-5. Use a carbide end mill suitable for plastic. The wiki says the lab has carbide tools from about 2 to 10 mm.
-6. Make sure the tool length is set correctly before any motion.
-
-## CAM Notes
-
-- Use millimeters, not inches.
-- Use the G54 work offset.
-- In FreeCAD CAM, disable automatic tool-length compensation with `--no-tlo` if you post-process there.
-- For plastics, the lab guidance suggests keeping radial engagement below 0.4 x tool diameter.
-- Use the manufacturer data sheet for the final feed and speed values, then reduce if needed. The wiki notes that 50% to 75% of manufacturer values is usually realistic on this machine.
-- If the tool diameter changes, revisit the contour radius limits and the feed per tooth before cutting.
-- The lab uses M7 mist coolant. Confirm with an expert whether to use it for your exact polycarbonate sheet and tool.
-
-## Operator Workflow
-
-1. Power on the machine, cooling pump, and PC.
-2. Start LinuxCNC and home all axes.
-3. Mount the sheet on the spoilboard so the full toolpath has clearance.
-4. Install the tool in the ER20 collet, keeping as much shank in the collet as practical.
-5. Set the tool length offset.
-6. Set G54 on the workpiece corner that matches your CAM origin.
-7. Load the program and inspect the preview carefully.
-8. Run a dry check with feed and rapid turned down.
-9. Start the program, then raise rapid and feed gradually while watching the first moves.
-
-## Orientation Recommendation
-
-- Center panel: place the 278 mm side along the X or Y axis, whichever leaves the best clamping room.
-- Corner panel: orient the 334 mm side along the 350 mm stock dimension. This leaves about 8 mm per side in that direction, which is sufficient for tape or screw fixturing; no edge clamps are needed on those sides.
-- Keep margin on the longer sides for any toe clamps or screw heads.
+1. Correct units (mm)
+2. Stock thickness set to 10 mm
+3. Correct DXF loaded for the panel size being cut
+4. Pocket depths assigned: top_pocket = 2 mm, mid_pocket = 5 mm, drill = 10 mm (through)
+5. Outline depth = 10 mm (through)
+6. Program origin matches machine setup corner
+7. Tabs or fixturing confirmed for outline cut
+8. Toolpath simulated before posting G-code
 
 ## Practical Cautions
 
-- Do not use the stationary spindle to touch off the sheet.
-- Do not let the tool rub in place; use moving contact or a proper touch-off method.
-- If the sheet starts to melt or weld to the cutter, stop and reduce the load or ask for help.
-- Cut one test piece first if the team has not already validated the toolpath and feeds for this stock.
-
-## Suggested CAM Exports
-
-For the provided panels, export the following DXFs from `panel_cnc_export.scad`:
-
-- `center_outline.dxf`
-- `center_drill.dxf`
-- `center_mid_pocket.dxf`
-- `center_top_pocket.dxf`
-- `corner_outline.dxf`
-- `corner_drill.dxf`
-- `corner_mid_pocket.dxf`
-- `corner_top_pocket.dxf`
-
-If your CAM can only handle a simpler workflow, you can use the outline and drill layers first and add the pockets after the machine setup is confirmed.
+- Cut one test piece before committing to a full panel if feeds and speeds have not been validated for your machine and stock
+- Do not let the tool dwell in place with the spindle running; this melts polycarbonate
+- If the part lifts or shifts during the outline cut, stop and re-fixture before continuing
