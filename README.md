@@ -8,9 +8,7 @@ The original design uses metal corner brackets + rubber L-pieces to hold the pan
 
 ### Assembly
 
-![Assembly top view](screenshots/assembly_top.png)
-
-![Assembly without panel](screenshots/assembly_no_panel.png)
+![Assembly](screenshots/assembly.gif)
 
 ### Corner piece
 

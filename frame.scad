@@ -7,7 +7,7 @@ frame_h  = 278;    // panel height
 
 // Fixed dimensions
 wall_t   = 1.5;
-fh       = 16.5;   // total frame height
+fh       = 20;   // total frame height
 arm_len  = 55.5;   // must match frame_mod.scad
 arm_w    = 24.0;
 piece_h  = 15.0;
@@ -15,7 +15,7 @@ arm_beam_h = 5.5;  // side arm height (from STL reference)
 
 pad_from_outer    = 9.525;
 side_hole_spacing = 35;
-screw_hole_d      = 6.5;   // M6 clearance
+screw_hole_d      = 6;   // M5 clearance
 
 $fn = 32;
 
@@ -25,14 +25,6 @@ module corner_holes() {
     for (pos = [[ph, ph], [leg, ph], [ph, leg]])
         translate([pos[0], pos[1], -0.1])
             cylinder(h = fh + 0.2, d = screw_hole_d);
-}
-
-module corner_pocket() {
-    translate([0, 0, -0.1])
-    union() {
-        cube([arm_len + 0.1, arm_w   + 0.1, piece_h + 0.2]);
-        cube([arm_w   + 0.1, arm_len + 0.1, piece_h + 0.2]);
-    }
 }
 
 // pw / ph = panel width / height (inner face dimensions)
@@ -62,11 +54,6 @@ module frame(pw = frame_w, ph = frame_h) {
             translate([ow-bw,   csz-0.1,   0]) cube([bw,     oh-2*csz+0.2,  wall_t]); // right floor
         }
 
-        // L-shaped corner pockets
-        translate([wall_t,   wall_t,   pz]) corner_pocket();                           // BL
-        translate([ow-wall_t, wall_t,  pz]) mirror([1,0,0]) corner_pocket();           // BR
-        translate([ow-wall_t, oh-wall_t, pz]) rotate([0,0,180]) corner_pocket();       // TR
-        translate([wall_t,   oh-wall_t, pz]) mirror([0,1,0]) corner_pocket();          // TL
 
         // Screw holes (3 per corner)
         corner_holes();                                            // BL
