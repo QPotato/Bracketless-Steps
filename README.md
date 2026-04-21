@@ -1,8 +1,14 @@
 # PIU Bracketless Conversion
 
-Converts an old-style Pump It Up arcade dance pad (corner-bracket style) to bracketless style.
+Pieces to mod a classic (corner-bracket style) Pump It Up arcade dance pad into bracketless. The main interesting pieces are:
+- `frame_mod.scad`: replaces the corner rubber piece. Covers the main frame screw to protect it from dust and has a piccket for a rivet and spacer, for your bracketless panel.
+- `panel_center_cnc.scad` and  `panel_corner_cnc.scad`: panel models, meant to be exported into CNC cutting instrucitons. Some pre-exported files included, not yet tested. Discussed below.
+- `frame.scad`: in case you want to print a full frame instead of keeping the metal ones.
+- `assembly.scad`: to visualize the expected result.
 
-The original design uses metal corner brackets + rubber L-pieces to hold the panels down. This mod replaces both with a single 3D-printed corner piece that uses a rivet nut + spacer system instead.
+Other 3D models like screws, spacers, rivet nuts and there for reference and for the assembly, ensuring it all fits together, but not meant to be printed.
+
+THIS IS STILL IN BETA, LET ME PRINT AND TEST MYSELF BEFORE YOU WASTE MATERIAL.
 
 ## Screenshots
 
@@ -18,18 +24,6 @@ The original design uses metal corner brackets + rubber L-pieces to hold the pan
 
 ![Corner piece bottom](screenshots/corner_piece_bottom.png)
 
----
-
-## How it works
-
-**Original stack (bottom to top):** frame → metal bracket → rubber L-piece → panel → bolt
-
-**Mod stack (bottom to top):** frame → 3D-printed corner piece (with embedded rivet nut) → spacer → panel → M6 countersunk screw
-
-The corner piece sits in a pocket in the frame corner. A rivet nut is pressed into the piece from the bottom. An M6 male-female standoff (spacer) screws into the rivet nut and protrudes above the piece. The panel drops over the spacer, and an M6 countersunk screw locks it from the top.
-
----
-
 ## Hardware (per corner)
 
 | Part | Spec | Notes |
@@ -37,34 +31,10 @@ The corner piece sits in a pocket in the frame corner. A rivet nut is pressed in
 | Rivet nut | M6, hex body, 13mm flange OD, 15mm total height | Press-fit into corner piece from bottom |
 | Spacer / standoff | M6 male-female, 8mm OD body, 10mm body height, 8mm stud | Screws into rivet nut, protrudes above piece |
 | Panel screw | M6 countersunk, 12mm length | Sits recessed in panel countersink |
-| Frame screws | M6, quantity 3 per corner | Pad-to-frame + 2× leg screws |
+| Frame screws | M5, quantity 3 per corner | Pad-to-frame + 2× leg screws |
 
 **Panels:** 10mm polycarbonate sheet, CNC cut.
 
----
-
-## Files
-
-### 3D-printed parts
-
-| File | Description |
-|---|---|
-| `frame_mod.scad` | **Main part — print 4×.** L-shaped corner piece with rivet nut pocket, pad-to-frame half-hole, and side leg holes. Tune all dimensions at the top of the file. |
-
-### Reference / visualization models (do not print)
-
-| File | Description |
-|---|---|
-| `frame.scad` | Parametric frame model. Used in assembly for visualization. |
-| `rivet_nut.scad` | Rivet nut reference model. |
-| `spacer.scad` | M6 standoff reference model. |
-| `screw_m6_csk.scad` | M6 countersunk screw reference model. |
-
-### Assembly visualization
-
-| File | Description |
-|---|---|
-| `assembly.scad` | Full assembly — shows center pad (278×278) and corner pad (334×278) side by side. Visibility flags at the top of the file let you show/hide individual parts. |
 
 ### CNC panel files
 
@@ -80,47 +50,6 @@ The corner piece sits in a pocket in the frame corner. A rivet nut is pressed in
 
 ---
 
-## Panel hole layers (for CNC)
-
-The panel hole at each corner is a 3-step profile:
-
-| Layer | DXF file | Diameter | Depth from top |
-|---|---|---|---|
-| Through drill | `*_drill.dxf` | 11mm | Full (10mm) |
-| Mid pocket | `*_mid_pocket.dxf` | 16mm | 5mm |
-| Top countersink | `*_top_pocket.dxf` | 20mm | 2mm |
-| Outer cut | `*_outline.dxf` | — | Full (10mm) |
-
-Import the relevant DXF files into your CAM software and assign the depths above. For laser cutters or basic routers, `outline` + `drill` are the minimum needed; pocket layers require depth control.
-
-See `cnc_cutting_guide.md` for requirements, DXF layer reference, and general CAM guidance. See `cnc_cutting_guide_fraese2.md` for a machine-specific worked example on CNC-Fraese-2.
-
----
-
-## Tunable parameters
-
-All key dimensions are constants at the top of `frame_mod.scad`:
-
-```
-arm_length        length of each L arm
-arm_width         width of each L arm
-height            corner piece height (not full frame thickness)
-spacer_from_outer panel screw center from outer face (must match panel hole offset)
-rivet_*           rivet nut dimensions
-pad_screw_dia     pad-to-frame screw hole diameter
-side_hole_spacing spacing between pad hole and leg holes
-```
-
----
-
-## Alignment notes
-
-- `spacer_from_outer = 22.7` matches the panel hole offset (22.7mm from panel edge).
-- The frame has 1.5mm outer walls. Hole positions in `frame.scad` are offset by `wall_t = 1.5` to align with the corner piece.
-- The corner piece sits in a 15mm deep pocket; the frame total height is 16.5mm (1.5mm base).
-
----
-
 ## Assembly order
 
 1. Press rivet nut into corner piece from the bottom (hex body up).
@@ -133,7 +62,7 @@ side_hole_spacing spacing between pad hole and leg holes
 
 ---
 
-## Creadits
+## Credits
 
 Thanks to Nirvash for the idea for the corner piece.
 Thanks to Vaughan14 in the Ryhthm Game Cabs discord server for the original schematics of the panels.
