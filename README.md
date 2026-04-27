@@ -2,11 +2,13 @@
 
 Pieces to mod a classic (corner-bracket style) Pump It Up arcade dance pad into bracketless. The main interesting pieces are:
 - `frame_mod.scad`: replaces the corner rubber piece. Covers the main frame screw to protect it from dust and has a piccket for a rivet and spacer, for your bracketless panel.
-- `center_panel.FCStd` and  `corner_panel.FCStd`: panel models, meant to be exported into CNC cutting instrucitons. Some pre-exported files included, not yet tested. Discussed below.
+- `center_panel.FCStd` and  `corner_panel.FCStd`: panel models, meant to be exported into CNC cutting instrucitons.
 - `frame.scad`: in case you want to print a full frame instead of keeping the metal ones.
 - `assembly.scad`: to visualize the expected result.
 
 Other 3D models like screws, spacers, and the OpenSCAD panels are there for reference and for the assembly, ensuring it all fits together, but not meant to be printed.
+
+Original schematics (`panelholedimensions.png` and `PIU_Bracketless.png`) by Vaughan14.
 
 THIS IS STILL IN BETA, LET ME PRINT AND TEST MYSELF BEFORE YOU WASTE MATERIAL.
 
@@ -26,14 +28,11 @@ THIS IS STILL IN BETA, LET ME PRINT AND TEST MYSELF BEFORE YOU WASTE MATERIAL.
 
 ## Hardware (per corner)
 
-| Part | Spec | Notes |
-|---|---|---|
-| Rivet nut | M6, hex body, 13mm flange OD, 15mm total height | Press-fit into corner piece from bottom |
-| Spacer / standoff | M6 male-female, 8mm OD body, 10mm body height, 8mm stud | Screws into rivet nut, protrudes above piece |
-| Panel screw | M6 countersunk, 12mm length | Sits recessed in panel countersink |
-| Frame screws | M5, quantity 3 per corner | Pad-to-frame + 2× leg screws |
+M6 hex bolt and threaded sleeve. Might add another version with a T-nut later.
 
-**Panels:** 10mm polycarbonate sheet, CNC cut.
+## Panels
+
+10mm polycarbonate sheet, CNC cut. Might add CNC files later, not sure how portable those are.
 
 ---
 
